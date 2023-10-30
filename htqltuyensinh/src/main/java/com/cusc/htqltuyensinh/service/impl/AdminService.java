@@ -66,4 +66,19 @@ public class AdminService implements IAdminService{
 		return (int) adminRepository.count();
 	}
 
+	
+	@Override
+	public AdminDTO login(AdminDTO adminDTO) { 
+		return checkLogin(adminDTO.getUserName(), adminDTO.getPassword());
+	}
+
+	public AdminDTO checkLogin(String userName, String password) {
+		AdminEntity adminEntity = adminRepository.findByUserNameAndPassword(userName, password);
+		
+		if (adminEntity != null) {
+	        return adminConverter.toDTO(adminEntity);
+	    } else {
+	        return new AdminDTO();
+	    }
+	}
 }

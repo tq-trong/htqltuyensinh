@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.cusc.htqltuyensinh.converter.ChangeLogConverter;
 import com.cusc.htqltuyensinh.dto.ChangeLogDTO;
@@ -12,6 +13,7 @@ import com.cusc.htqltuyensinh.entity.ChangeLogEntity;
 import com.cusc.htqltuyensinh.repository.ChangeLogRepository;
 import com.cusc.htqltuyensinh.service.IChangeLogService;
 
+@Service
 public class ChangeLogService implements IChangeLogService{
 	
 	@Autowired

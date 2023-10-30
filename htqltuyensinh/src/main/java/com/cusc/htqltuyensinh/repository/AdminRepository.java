@@ -10,4 +10,5 @@ public interface AdminRepository extends JpaRepository<AdminEntity, Long>, BaseR
 	List<AdminEntity> findByCodeContaining(String keyword, Pageable pageable);
 	int countByCodeContaining(String keyword);
 	AdminEntity findOneByCode(String code);
+	AdminEntity findByUserNameAndPassword(String userName, String password);
 }

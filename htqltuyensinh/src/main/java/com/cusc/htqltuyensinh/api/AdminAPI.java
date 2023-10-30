@@ -58,4 +58,9 @@ public class AdminAPI {
 	public void deleteAdmin(@RequestBody long[] ids) {
 		adminService.remove(ids);
 	}
+	
+	@PostMapping("/login")
+    public AdminDTO login(@RequestBody AdminDTO adminDTO) {
+        return adminService.login(adminDTO);
+    }
 }

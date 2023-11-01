@@ -3,6 +3,7 @@ package com.cusc.htqltuyensinh.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,18 +51,20 @@ public class UserService implements IUserService{
 
 	@Override
 	public UserDTO save(UserDTO dto) {
-		
-		UserEntity userEntity = new UserEntity();
-
-		if(dto.getId() != null) {
-			UserEntity oldUser = userRepository.findOne(dto.getId());
-			
-			userEntity = userConverter.toEntity(dto, oldUser);
-		} else {
-			userEntity = userConverter.toEntity(dto);
-		}
-		userEntity = userRepository.save(userEntity);
-		return userConverter.toDTO(userEntity);
+	    UserEntity userEntity;
+	    if (dto.getId() != null) {
+	        Optional<UserEntity> userOptional = userRepository.findById(dto.getId());
+	        if (userOptional.isPresent()) {
+	            UserEntity oldUser = userOptional.get();
+	            userEntity = userConverter.toEntity(dto, oldUser);
+	        } else {
+	            return null;
+	        }
+	    } else {
+	        userEntity = userConverter.toEntity(dto);
+	    }
+	    userEntity = userRepository.save(userEntity);
+	    return userConverter.toDTO(userEntity);
 	}
 	
 	
@@ -69,7 +72,7 @@ public class UserService implements IUserService{
 	@Override
 	public void remove(long[] ids) {
 		for(long item : ids) {
-			userRepository.delete(item);
+			userRepository.deleteById(item);
 		}
 		
 	}
@@ -91,7 +94,7 @@ public class UserService implements IUserService{
         }
 
         if (!entitiesToSave.isEmpty()) {
-            List<UserEntity> savedEntities = userRepository.save(entitiesToSave);
+            List<UserEntity> savedEntities = userRepository.saveAll(entitiesToSave);
             savedUsers = savedEntities.stream()
                     .map(userConverter::toDTO)
                     .collect(Collectors.toList());

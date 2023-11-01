@@ -28,7 +28,7 @@ public class ChangeLogAPI {
 		ChangeLogOutput result = new ChangeLogOutput();
 		result.setPage(page);
 		
-		Pageable pageable = new PageRequest(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, limit);
 		
 		result.setListResult(changeLogService.findAll(input.getKeyword(), pageable));
 		

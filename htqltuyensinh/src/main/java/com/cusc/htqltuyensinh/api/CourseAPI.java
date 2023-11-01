@@ -34,7 +34,7 @@ public class CourseAPI {
 		CourseOutput result = new CourseOutput();
 		result.setPage(page);
 		
-		Pageable pageable = new PageRequest(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, limit);
 		result.setListResult(courseService.findAll(input.getKeyword(), pageable));
 		
 		long totalItems = courseService.totalItem(input.getKeyword());

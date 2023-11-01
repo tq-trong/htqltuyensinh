@@ -3,6 +3,7 @@ package com.cusc.htqltuyensinh.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.AdminOutput;
+import com.cusc.htqltuyensinh.api.output.LoginOutput;
 import com.cusc.htqltuyensinh.dto.AdminDTO;
 import com.cusc.htqltuyensinh.service.IAdminService;
 
@@ -34,7 +36,7 @@ public class AdminAPI {
 		AdminOutput result = new AdminOutput();
 		result.setPage(page);
 		
-		Pageable pageable = new PageRequest(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, limit);
 		result.setListResult(adminService.findAll(input.getKeyword(), pageable));
 		
 		long totalItems = adminService.totalItem(input.getKeyword());
@@ -59,8 +61,10 @@ public class AdminAPI {
 		adminService.remove(ids);
 	}
 	
-	@PostMapping("/login")
-    public AdminDTO login(@RequestBody AdminDTO adminDTO) {
-        return adminService.login(adminDTO);
+	@PostMapping(value = "/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody AdminDTO model) {
+		System.out.print("=================>"+ model.getUsername() + model.getPassword());
+      LoginOutput output = adminService.login(model);
+      return ResponseEntity.ok(output);
     }
 }

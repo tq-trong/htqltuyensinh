@@ -1,6 +1,7 @@
 package com.cusc.htqltuyensinh.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,7 @@ public interface AdminRepository extends JpaRepository<AdminEntity, Long>, BaseR
 	List<AdminEntity> findByCodeContaining(String keyword, Pageable pageable);
 	int countByCodeContaining(String keyword);
 	AdminEntity findOneByCode(String code);
-	AdminEntity findByUserNameAndPassword(String userName, String password);
+	AdminEntity findByUsername(String username);
+	
+	Optional<AdminEntity> findOneByUsernameAndPassword(String username, String password);
 }

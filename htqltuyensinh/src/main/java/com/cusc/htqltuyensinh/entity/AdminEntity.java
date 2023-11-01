@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Email;
 
 
 @Entity
@@ -25,7 +23,7 @@ public class AdminEntity extends BaseEntity{
 	private Date birthday;
 	
 	@Column(name = "username")
-	private String userName;
+	private String username;
 	
 	@Column(name = "password")
 	private String password;
@@ -33,14 +31,12 @@ public class AdminEntity extends BaseEntity{
 	@Column(name = "gender")
 	private boolean gender;
 	
-	@Pattern(regexp = "^[0-9]{10,11}$", message = "Số điện thoại không hợp lệ")
 	@Column(name = "phone")
 	private String phone;
 	
 	@Column(name = "address")
 	private String address;
 	
-	@Email(message = "Email không hợp lệ")
 	@Column(name = "email")
 	private String email;
 	
@@ -89,12 +85,12 @@ public class AdminEntity extends BaseEntity{
 		this.birthday = birthday;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -192,6 +188,8 @@ public class AdminEntity extends BaseEntity{
 	public void setCalls(List<CallEntity> calls) {
 		this.calls = calls;
 	}
+	
+	
 	
 	
 }

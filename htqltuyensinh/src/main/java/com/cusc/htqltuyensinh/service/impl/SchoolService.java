@@ -1,6 +1,7 @@
 package com.cusc.htqltuyensinh.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,22 +47,26 @@ public class SchoolService implements ISchoolService{
 
 	@Override
 	public SchoolDTO save(SchoolDTO dto) {
-		SchoolEntity schoolEntity = new SchoolEntity();
-		
-		if(dto.getId() != null) {
-			SchoolEntity oldSchool = schoolRepository.findOne(dto.getId());
-			schoolEntity = schoolConverter.toEntity(dto, oldSchool);
-		} else {
-			schoolEntity = schoolConverter.toEntity(dto);
-		}
-		schoolEntity = schoolRepository.save(schoolEntity);
-		return schoolConverter.toDTO(schoolEntity);
+	    SchoolEntity schoolEntity;
+	    if (dto.getId() != null) {
+	        Optional<SchoolEntity> schoolOptional = schoolRepository.findById(dto.getId());
+	        if (schoolOptional.isPresent()) {
+	            SchoolEntity oldSchool = schoolOptional.get();
+	            schoolEntity = schoolConverter.toEntity(dto, oldSchool);
+	        } else {
+	            return null; 
+            }
+	    } else {
+	        schoolEntity = schoolConverter.toEntity(dto);
+	    }
+	    schoolEntity = schoolRepository.save(schoolEntity);
+	    return schoolConverter.toDTO(schoolEntity);
 	}
 
 	@Override
 	public void remove(long[] ids) {
 		for(long item : ids) {
-			schoolRepository.delete(item);
+			schoolRepository.deleteById(item);
 		}
 		
 	}

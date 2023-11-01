@@ -37,7 +37,7 @@ public class UserAPI {
 		UserOutput result = new UserOutput();
 		result.setPage(page);
 		
-		Pageable pageable = new PageRequest(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, limit);
 		result.setListResult(userService.findAll(input.getKeyword() ,pageable));
 		
 		long totalItems = userService.totalItem(input.getKeyword());

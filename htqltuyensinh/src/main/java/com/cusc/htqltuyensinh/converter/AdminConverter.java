@@ -16,7 +16,7 @@ public class AdminConverter {
 		entity.setAddress(dto.getAddress());
 		entity.setGender(dto.isGender());
 		entity.setPhone(dto.getPhone());
-		entity.setUserName(dto.getUserName());
+		entity.setUsername(dto.getUsername());
 		entity.setPassword(dto.getPassword());
 		entity.setRole(dto.isRole());
 		entity.setStatus(dto.isStatus());
@@ -34,7 +34,7 @@ public class AdminConverter {
 		dto.setAddress(entity.getAddress());
 		dto.setGender(entity.isGender());
 		dto.setPhone(entity.getPhone());
-		dto.setUserName(entity.getUserName());
+		dto.setUsername(entity.getUsername());
 		dto.setPassword(entity.getPassword());
 		dto.setRole(entity.isRole());
 		dto.setStatus(entity.isStatus());
@@ -50,7 +50,7 @@ public class AdminConverter {
 		entity.setAddress(dto.getAddress());
 		entity.setGender(dto.isGender());
 		entity.setPhone(dto.getPhone());
-		entity.setUserName(dto.getUserName());
+		entity.setUsername(dto.getUsername());
 		entity.setPassword(dto.getPassword());
 		entity.setRole(dto.isRole());
 		entity.setStatus(dto.isStatus());

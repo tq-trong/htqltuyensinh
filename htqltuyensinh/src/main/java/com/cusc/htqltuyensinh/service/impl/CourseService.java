@@ -1,6 +1,7 @@
 package com.cusc.htqltuyensinh.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,22 +49,26 @@ public class CourseService implements ICourseService{
 
 	@Override
 	public CourseDTO save(CourseDTO dto) {
-		CourseEntity entity = new CourseEntity();
-		
-		if(dto.getId() != null) {
-			CourseEntity oldCourse = courseRepository.findOne(dto.getId());
-			entity = courseConverter.toEntity(dto, oldCourse);
-		} else {
-			entity = courseConverter.toEntity(dto);
-		}
-		entity = courseRepository.save(entity);
-		return courseConverter.toDTO(entity);
+	    CourseEntity entity;
+	    if (dto.getId() != null) {
+	        Optional<CourseEntity> courseOptional = courseRepository.findById(dto.getId());
+	        if (courseOptional.isPresent()) {
+	            CourseEntity oldCourse = courseOptional.get();
+	            entity = courseConverter.toEntity(dto, oldCourse);
+	        } else {
+	            return null;
+	        }
+	    } else {
+	        entity = courseConverter.toEntity(dto);
+	    }
+	    entity = courseRepository.save(entity);
+	    return courseConverter.toDTO(entity);
 	}
 
 	@Override
 	public void remove(long[] ids) {
 		for(long item : ids) {
-			courseRepository.delete(item);
+			courseRepository.deleteById(item);
 		}
 		
 	}

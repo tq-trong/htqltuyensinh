@@ -34,7 +34,7 @@ public class SchoolAPI {
 		SchoolOutput results = new SchoolOutput();
 		results.setPage(page);
 		
-		Pageable pageable = new PageRequest(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, limit);
 		results.setListResult(schoolService.findAll(input.getKeyword(), pageable));
 		
 		long totalItems = schoolService.totalItem(input.getKeyword());

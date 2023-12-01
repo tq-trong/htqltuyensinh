@@ -1,15 +1,28 @@
 package com.cusc.htqltuyensinh.service.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cusc.htqltuyensinh.api.output.LoginOutput;
+import com.cusc.htqltuyensinh.api.output.CustomUserDetails;
 import com.cusc.htqltuyensinh.converter.AdminConverter;
 import com.cusc.htqltuyensinh.dto.AdminDTO;
 import com.cusc.htqltuyensinh.entity.AdminEntity;
@@ -17,12 +30,15 @@ import com.cusc.htqltuyensinh.repository.AdminRepository;
 import com.cusc.htqltuyensinh.service.IAdminService;
 
 @Service
-public class AdminService implements IAdminService {
+public class AdminService implements IAdminService, UserDetailsService {
 	@Autowired
 	private AdminRepository adminRepository;
 
 	@Autowired
 	private AdminConverter adminConverter;
+	
+	@Autowired
+    private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -76,51 +92,51 @@ public class AdminService implements IAdminService {
 		}
 		return (int) adminRepository.count();
 	}
-
+	
 	@Override
-	public LoginOutput login(AdminDTO dto) {
-		AdminEntity entity = adminRepository.findByUsername(dto.getUsername());
-		if (entity != null) {
-			String password = dto.getPassword();
-			String encodePass = entity.getPassword();
-			Boolean isPwdRight = passwordEncoder.matches(password, encodePass);
-			if (isPwdRight) {
-				Optional<AdminEntity> adminEntity = adminRepository.findOneByUsernameAndPassword(dto.getUsername(),
-						encodePass);
-				if (adminEntity.isPresent()) {
-					return new LoginOutput(adminConverter.toDTO(entity), true);
-				} else {
-					return new LoginOutput(null, false);
-				}
-			} else {
-				return new LoginOutput(null, false);
-			}
-		}
-		return new LoginOutput(null, false);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AdminEntity admin = adminRepository.findByUsername(username);
+        if (admin == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(admin.isRole() ? "ADMIN" : "USERMANAGER"));
+
+        return new CustomUserDetails(
+                admin.getCode(),
+                admin.getName(),
+                admin.getBirthday(),
+                admin.getUsername(),
+                admin.getPassword(),
+                admin.isGender(),
+                admin.getPhone(),
+                admin.getAddress(),
+                admin.getEmail(),
+                admin.isRole(),
+                admin.isStatus(),
+                authorities
+            );
+    }
+	
+	public void login(AdminDTO dto, HttpServletResponse response) {
+	    try {
+	        Authentication authentication = authenticationManager.authenticate(
+	            new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
+	        );
+
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	    } catch (AuthenticationException e) {
+	        // Xử lý trường hợp xác thực không thành công
+	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	        try {
+	            response.getWriter().write("Authentication failed");
+	        } catch (IOException ioException) {
+	            // Xử lý lỗi khi ghi vào response
+	            ioException.printStackTrace();
+	        }
+	    }
 	}
 
-//	@Override
-//    public UserDetails loadUserByUsername(String username) {
-//        try {
-//        	username="test";
-//            AdminEntity entity = adminRepository.findByUsername(username);
-//            if (entity == null) {
-//                throw new UsernameNotFoundException("Không tìm thấy người dùng");
-//            }
-//
-//            List<GrantedAuthority> authorities = new ArrayList<>();
-//            if (entity.isRole()) {
-//                authorities.add(new SimpleGrantedAuthority("ADMIN"));
-//            } else {
-//                authorities.add(new SimpleGrantedAuthority("USERMANAGER"));
-//            }
-//            System.out.print("===================> " +entity.getPassword());
-//            System.out.print("===================> " + username);
-//            return new org.springframework.security.core.userdetails.User(entity.getUsername(), entity.getPassword(), authorities);
-//        } catch (Exception e) {
-//        	System.out.print(username);
-//            // Xử lý ngoại lệ và ghi log (nếu cần)
-//            throw new UsernameNotFoundException("Không thể tìm người dùng: " + e.getMessage(), e);
-//        }
-//    }
+
+
 }

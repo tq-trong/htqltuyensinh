@@ -51,4 +51,10 @@ public class ChangeLogService implements IChangeLogService{
 		
 	}
 
+	@Override
+	public ChangeLogDTO findById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -33,6 +33,8 @@ import com.cusc.htqltuyensinh.service.impl.AdminService;
 @RestController
 public class AdminAPI {
 	
+	int LIMIT_ITEMS = 10;
+	
 	@Autowired
 	private AdminService adminService;
 	
@@ -41,24 +43,30 @@ public class AdminAPI {
 	
 	
 	
-	@GetMapping(value = "/admin")
-	public AdminOutput showAdmin(@RequestParam("page") int page, 
-								 @RequestParam("limit") int limit,
+	@GetMapping(value = "/api/admins")
+	public AdminOutput showAdmins(@RequestParam("page") int page, 
 								 @ModelAttribute Input input) {
 		
 		AdminOutput result = new AdminOutput();
 		result.setPage(page);
 		
-		Pageable pageable = PageRequest.of(page - 1, limit);
+		Pageable pageable = PageRequest.of(page - 1, LIMIT_ITEMS);
 		result.setListResult(adminService.findAll(input.getKeyword(), pageable));
 		
 		long totalItems = adminService.totalItem(input.getKeyword());
 		
-		result.setTotalPage(result.setTotalPage(totalItems, limit));
+		result.setTotalPage(result.setTotalPage(totalItems, LIMIT_ITEMS));
 		return result;
 	}
 	
-	@PostMapping(value = "/admin")
+	@GetMapping(value = "/api/admins/{id}")
+	public AdminOutput showAdmin(@PathVariable("id") long id) {
+		AdminOutput result = new AdminOutput();
+		result.setAdmin(adminService.findById(id));
+		return result;
+	}
+	
+	@PostMapping(value = "/api/admins")
 	public AdminDTO createAdmin(@RequestBody AdminDTO model) {
 		return adminService.save(model);
 	}

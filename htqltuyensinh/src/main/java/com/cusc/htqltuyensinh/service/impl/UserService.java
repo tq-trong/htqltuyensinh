@@ -107,4 +107,10 @@ public class UserService implements IUserService{
         return userRepository.existsByPhone(phone);
     }
 
+	@Override
+	public UserDTO findById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

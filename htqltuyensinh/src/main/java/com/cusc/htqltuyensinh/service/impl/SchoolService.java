@@ -71,4 +71,10 @@ public class SchoolService implements ISchoolService{
 		
 	}
 
+	@Override
+	public SchoolDTO findById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

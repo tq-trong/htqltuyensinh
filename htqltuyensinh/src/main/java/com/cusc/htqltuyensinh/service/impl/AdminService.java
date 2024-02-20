@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,11 @@ public class AdminService implements IAdminService, UserDetailsService {
 	    }
 	}
 
-
-
+	@Override
+	public AdminDTO findById(long id) {
+		AdminEntity adminEntity;
+	    Optional<AdminEntity> adminOptional = adminRepository.findById(id);
+	    adminEntity = adminOptional.get();
+	    return adminConverter.toDTO(adminEntity);
+	}
 }

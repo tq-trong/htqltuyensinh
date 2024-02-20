@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractOutput<T> {
-	private int page;
-	private int totalPage;
+	private int page = 0;
+	private int totalPage = 0;
 	private List<T> listResult = new ArrayList<>();
 	
 	public int getPage() {

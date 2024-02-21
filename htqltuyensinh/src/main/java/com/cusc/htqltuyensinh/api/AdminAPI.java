@@ -27,6 +27,7 @@ import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.AdminOutput;
 import com.cusc.htqltuyensinh.api.output.CustomUserDetails;
 import com.cusc.htqltuyensinh.dto.AdminDTO;
+import com.cusc.htqltuyensinh.dto.PasswordDTO;
 import com.cusc.htqltuyensinh.service.impl.AdminService;
 
 @CrossOrigin
@@ -71,7 +72,13 @@ public class AdminAPI {
 		return adminService.save(model);
 	}
 	
-	@PutMapping(value = "/admin/{id}")
+	@PostMapping(value = "/api/admins/checkPass/{id}")
+	public boolean checkPassword(@PathVariable("id") long id, @RequestBody PasswordDTO passwordDTO) {
+		String password = passwordDTO.getPassword();
+		return adminService.checkPass(id, password);
+	}
+	
+	@PutMapping(value = "/api/admins/{id}")
 	public AdminDTO updateAdmin(@RequestBody AdminDTO model, @PathVariable("id") long id) {
 		model.setId(id);
 		return adminService.save(model);

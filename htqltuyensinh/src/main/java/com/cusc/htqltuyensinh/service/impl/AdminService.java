@@ -51,7 +51,11 @@ public class AdminService implements IAdminService, UserDetailsService {
 			Optional<AdminEntity> adminOptional = adminRepository.findById(dto.getId());
 			if (adminOptional.isPresent()) {
 				AdminEntity oldAdmin = adminOptional.get();
+				String oldPass = oldAdmin.getPassword();
 				adminEntity = adminConverter.toEntity(dto, oldAdmin);
+				if(dto.getPassword() != oldPass) {
+					adminEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
+				}
 			} else {
 				return null;
 			}
@@ -63,7 +67,19 @@ public class AdminService implements IAdminService, UserDetailsService {
 		adminRepository.save(adminEntity);
 		return adminConverter.toDTO(adminEntity);
 	}
-
+	@Override
+	public boolean checkPass(long id, String password) {
+	    Optional<AdminEntity> adminOptional = adminRepository.findById(id);
+	    // Kiểm tra xem có giá trị trong Optional không
+	    if (adminOptional.isPresent()) {
+	        AdminEntity adminEntity = adminOptional.get();
+	        boolean isPasswordMatch = passwordEncoder.matches(password, adminEntity.getPassword());
+	        return isPasswordMatch;
+	    } else {
+	        // Nếu không có giá trị tồn tại, trả về false
+	        return false;
+	    }
+	}
 	@Override
 	public List<AdminDTO> findAll(String keyword, Pageable pageable) { // Get list Admin
 		List<AdminEntity> entities;

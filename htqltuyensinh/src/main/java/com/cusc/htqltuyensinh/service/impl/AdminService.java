@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +52,11 @@ public class AdminService implements IAdminService, UserDetailsService {
 				AdminEntity oldAdmin = adminOptional.get();
 				String oldPass = oldAdmin.getPassword();
 				adminEntity = adminConverter.toEntity(dto, oldAdmin);
-				if(dto.getPassword() != oldPass) {
-					adminEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
-				}
+				if (dto.getPassword() != null && !dto.getPassword().equals(oldPass)) {
+	                adminEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
+	            } else {
+	                adminEntity.setPassword(oldPass); // Sử dụng mật khẩu cũ nếu không có mật khẩu mới hoặc mật khẩu mới giống mật khẩu cũ
+	            }
 			} else {
 				return null;
 			}

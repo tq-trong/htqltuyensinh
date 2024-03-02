@@ -22,9 +22,8 @@ public class UserEntity extends BaseEntity{
 	@Column(name = "job")
 	private String job;
 	
-	@ManyToOne
-	@JoinColumn(name = "provinces_id")
-    private ProvinceEntity province;
+	@Column(name = "province_id")
+    private String province;
 	
 	@ManyToOne
 	@JoinColumn(name = "schools_id")
@@ -90,11 +89,11 @@ public class UserEntity extends BaseEntity{
 		this.job = job;
 	}
 
-	public ProvinceEntity getProvince() {
+	public String getProvince() {
 		return province;
 	}
 
-	public void setProvince(ProvinceEntity province) {
+	public void setProvince(String province) {
 		this.province = province;
 	}
 

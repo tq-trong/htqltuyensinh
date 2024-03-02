@@ -4,17 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cusc.htqltuyensinh.dto.UserDTO;
-import com.cusc.htqltuyensinh.entity.ProvinceEntity;
 import com.cusc.htqltuyensinh.entity.SchoolEntity;
 import com.cusc.htqltuyensinh.entity.UserEntity;
-import com.cusc.htqltuyensinh.repository.ProvinceRepository;
 import com.cusc.htqltuyensinh.repository.SchoolRepository;
 
 @Component
 public class UserConverter {
 	
-	@Autowired
-	private ProvinceRepository provinceRepository;
 	
 	@Autowired
 	private SchoolRepository schoolRepository;
@@ -23,13 +19,12 @@ public class UserConverter {
 
 		UserEntity entity = new UserEntity();
 		
-		ProvinceEntity provinceEntity = provinceRepository.findOneByCode(dto.getProvince());
 		SchoolEntity schoolEntity = schoolRepository.findOneByCode(dto.getSchool());
 
 		entity.setName(dto.getName());
 		entity.setBirthday(dto.getBirthday());
 		entity.setJob(dto.getJob());
-		entity.setProvince(provinceEntity);
+		entity.setProvince(dto.getProvince());
 		entity.setSchool(schoolEntity);
 		entity.setEmail(dto.getEmail());
 		entity.setPhone(dto.getPhone());
@@ -50,7 +45,7 @@ public class UserConverter {
 		dto.setName(entity.getName());
 		dto.setBirthday(entity.getBirthday());
 		dto.setJob(entity.getJob());
-		dto.setProvince(entity.getProvince().getCode());
+		dto.setProvince(entity.getProvince());
 		dto.setSchool(entity.getSchool().getCode());
 		dto.setEmail(entity.getEmail());
 		dto.setPhone(entity.getPhone());
@@ -66,13 +61,13 @@ public class UserConverter {
 
 	public UserEntity toEntity(UserDTO dto, UserEntity entity) {
 
-		ProvinceEntity provinceEntity = provinceRepository.findOneByCode(dto.getProvince());
+		//ProvinceEntity provinceEntity = provinceRepository.findOneByCode(dto.getProvince());
 		SchoolEntity schoolEntity = schoolRepository.findOneByCode(dto.getSchool());
 		
 		entity.setName(dto.getName());
 		entity.setBirthday(dto.getBirthday());
 		entity.setJob(dto.getJob());
-		entity.setProvince(provinceEntity);
+		entity.setProvince(dto.getProvince());
 		entity.setSchool(schoolEntity);
 		entity.setEmail(dto.getEmail());
 		entity.setPhone(dto.getPhone());

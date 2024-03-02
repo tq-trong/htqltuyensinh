@@ -19,9 +19,8 @@ public class SchoolEntity extends BaseEntity{
 	@Column(name = "name")
 	private String name;
 	
-	@ManyToOne
-	@JoinColumn(name = "provinces_id")
-    private ProvinceEntity province;
+	@Column(name = "provinces_id")
+    private String province;
 
 	@OneToMany(mappedBy = "school")
     private List<UserEntity> users = new ArrayList<>();
@@ -42,11 +41,11 @@ public class SchoolEntity extends BaseEntity{
 		this.name = name;
 	}
 
-	public ProvinceEntity getProvince() {
+	public String getProvince() {
 		return province;
 	}
 
-	public void setProvince(ProvinceEntity province) {
+	public void setProvince(String province) {
 		this.province = province;
 	}
 

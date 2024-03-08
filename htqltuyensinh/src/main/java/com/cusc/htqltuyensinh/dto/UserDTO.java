@@ -1,6 +1,8 @@
 package com.cusc.htqltuyensinh.dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDTO extends BaseDTO<UserDTO>{
 	private String name;
@@ -15,8 +17,17 @@ public class UserDTO extends BaseDTO<UserDTO>{
 	private String zalo;
 	private String facebook;
 	private String gatherDescription;
+	private boolean gender;
 	private boolean status;
+	private List<String> favoriteSubjects;
+	private String descriptionSubject;
 	
+	public String getDescriptionSubject() {
+		return descriptionSubject;
+	}
+	public void setDescriptionSubject(String descriptionSubject) {
+		this.descriptionSubject = descriptionSubject;
+	}
 	public String getName() {
 		return name;
 	}
@@ -95,6 +106,19 @@ public class UserDTO extends BaseDTO<UserDTO>{
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+	public List<String> getFavoriteSubjects() {
+		return favoriteSubjects;
+	}
+	public void setFavoriteSubjects(List<String> favoriteSubjects) {
+		this.favoriteSubjects = favoriteSubjects;
+	}
+	public boolean isGender() {
+		return gender;
+	}
+	public void setGender(boolean gender) {
+		this.gender = gender;
+	}
+	
 	
 	
 }

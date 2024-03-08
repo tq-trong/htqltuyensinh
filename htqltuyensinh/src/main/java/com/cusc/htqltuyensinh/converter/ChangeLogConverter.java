@@ -13,10 +13,13 @@ public class ChangeLogConverter {
 	@Autowired
 	private AdminRepository adminRepository;
 	
+	@Autowired
+	private AdminConverter adminConverter;
+	
 	public ChangeLogEntity toEntity(ChangeLogDTO dto) {
 		
 		ChangeLogEntity entity = new ChangeLogEntity();
-		AdminEntity adminEntity = adminRepository.findOneByCode(dto.getAdmin());
+		AdminEntity adminEntity = adminRepository.findOneByCode(dto.getAdmin().getCode());
 		
 		entity.setTime(dto.getTime());
 		entity.setDescription(dto.getDescription());
@@ -32,14 +35,14 @@ public class ChangeLogConverter {
 		
 		dto.setTime(entity.getTime());
 		dto.setDescription(entity.getDescription());
-		dto.setAdmin(entity.getAdmin().getCode());
+		dto.setAdmin(adminConverter.toDTO(entity.getAdmin()));
 		
 		return dto;
 	}
 	
 	public ChangeLogEntity toEntity(ChangeLogDTO dto, ChangeLogEntity entity) {
 		
-		AdminEntity adminEntity = adminRepository.findOneByCode(dto.getAdmin());
+		AdminEntity adminEntity = adminConverter.toEntity(dto.getAdmin());
 		
 		entity.setTime(dto.getTime());
 		entity.setDescription(dto.getDescription());

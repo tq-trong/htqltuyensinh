@@ -1,9 +1,9 @@
 package com.cusc.htqltuyensinh.dto;
 
-public class ProvinceDTO extends BaseDTO<ProvinceDTO>{
-	
+public class SubjectDTO extends BaseDTO<SubjectDTO>{
 	private String code;
 	private String name;
+	
 	
 	public String getCode() {
 		return code;

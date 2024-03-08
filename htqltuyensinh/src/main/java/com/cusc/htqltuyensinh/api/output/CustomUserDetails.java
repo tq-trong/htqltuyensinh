@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
+	private long id;
     private String code;
     private String name;
     private Date birthday;
@@ -22,6 +23,7 @@ public class CustomUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(
+    		long id,
             String code,
             String name,
             Date birthday,
@@ -34,7 +36,8 @@ public class CustomUserDetails implements UserDetails {
             boolean role,
             boolean status,
             Collection<? extends GrantedAuthority> authorities) {
-        this.code = code;
+    	this.id = id;
+    	this.code = code;
         this.name = name;
         this.birthday = birthday;
         this.username = username;
@@ -50,7 +53,19 @@ public class CustomUserDetails implements UserDetails {
     
     
 
-    public CustomUserDetails() {
+    public long getId() {
+		return id;
+	}
+
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
+
+	public CustomUserDetails() {
 
 	}
 

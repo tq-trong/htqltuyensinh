@@ -53,6 +53,9 @@ public class UserEntity extends BaseEntity{
 	@Column(name = "status")
 	private boolean status;
 	
+	@Column(name = "gender")
+	private boolean gender;
+	
 	@OneToMany(mappedBy = "user")
     private List<FavoriteSubjectEntity> favoriteSubjects = new ArrayList<>();
 
@@ -200,5 +203,14 @@ public class UserEntity extends BaseEntity{
 	public void setCalls(List<CallEntity> calls) {
 		this.calls = calls;
 	}
+
+	public boolean isGender() {
+		return gender;
+	}
+
+	public void setGender(boolean gender) {
+		this.gender = gender;
+	}
+	
 	
 }

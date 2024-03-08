@@ -121,6 +121,7 @@ public class AdminService implements IAdminService, UserDetailsService {
         authorities.add(new SimpleGrantedAuthority(admin.isRole() ? "ADMIN" : "USERMANAGER"));
 
         return new CustomUserDetails(
+        		admin.getId(),
                 admin.getCode(),
                 admin.getName(),
                 admin.getBirthday(),

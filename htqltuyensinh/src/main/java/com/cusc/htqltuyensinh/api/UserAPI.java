@@ -48,7 +48,7 @@ public class UserAPI {
 		return result;
 	}
 
-	@PostMapping(value = "/user")
+	@PostMapping(value = "/api/users")
 	public ResponseEntity<List<UserDTO>> createUser(@RequestBody List<UserDTO> userDTOs) {
 		List<UserDTO> savedUsers = userService.saveAll(userDTOs);
 		return ResponseEntity.ok(savedUsers);

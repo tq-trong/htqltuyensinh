@@ -105,6 +105,7 @@ public class AdminAPI {
 	    } catch (AuthenticationException e) {
 	        // Xử lý trường hợp xác thực không thành công
 	        CustomUserDetails failedOutput = new CustomUserDetails(
+	        	0,
 	            null, // code
 	            null, // name
 	            null, // birthday

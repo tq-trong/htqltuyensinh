@@ -34,6 +34,7 @@ public class UserConverter {
 		entity.setFacebook(dto.getFacebook());
 		entity.setGatherDescription(dto.getGatherDescription());
 		entity.setStatus(dto.isStatus());
+		entity.setGender(dto.isGender());
 
 		return entity;
 	}

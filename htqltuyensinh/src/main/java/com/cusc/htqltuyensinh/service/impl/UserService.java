@@ -11,9 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.cusc.htqltuyensinh.converter.FavoriteSubjectConverter;
+import com.cusc.htqltuyensinh.converter.SubjectConverter;
 import com.cusc.htqltuyensinh.converter.UserConverter;
 import com.cusc.htqltuyensinh.dto.UserDTO;
+import com.cusc.htqltuyensinh.dto.FavoriteSubjectDTO;
+import com.cusc.htqltuyensinh.dto.SubjectDTO;
+import com.cusc.htqltuyensinh.entity.FavoriteSubjectEntity;
+import com.cusc.htqltuyensinh.entity.SubjectEntity;
 import com.cusc.htqltuyensinh.entity.UserEntity;
+import com.cusc.htqltuyensinh.repository.FavoriteSubjectRepository;
+import com.cusc.htqltuyensinh.repository.SubjectRepository;
 import com.cusc.htqltuyensinh.repository.UserRepository;
 import com.cusc.htqltuyensinh.service.IUserService;
 
@@ -25,6 +33,18 @@ public class UserService implements IUserService{
 	
 	@Autowired
 	private UserConverter userConverter;
+	
+	@Autowired
+	private SubjectConverter subjectConverter;
+	
+	@Autowired
+	private SubjectRepository subjectRepository;
+	
+	@Autowired
+	private FavoriteSubjectConverter favoriteSubjectConverter;
+	
+	@Autowired
+	private FavoriteSubjectRepository favoriteSubjectRepository;
 	
 	@Override
 	public int totalItem(String keyword) {
@@ -80,7 +100,10 @@ public class UserService implements IUserService{
 	@Override
 	public List<UserDTO> saveAll(List<UserDTO> userDTOs) {
         List<UserDTO> savedUsers = new ArrayList<>();
-        List<UserEntity> entitiesToSave = new ArrayList<>();
+        List<UserEntity> entitiesUserToSave = new ArrayList<>();
+        
+        List<FavoriteSubjectDTO> savedfavoriteSubject= new ArrayList<>();
+        List<FavoriteSubjectEntity> favoriteSubjectsToSave = new ArrayList<>();
         
         Set<String> phoneNumbersAdded = new HashSet<>(); // Lưu trữ số điện thoại đã thêm
 
@@ -89,13 +112,38 @@ public class UserService implements IUserService{
             if (!phoneNumbersAdded.contains(phone) && !isPhoneNumberExist(dto.getPhone())) { // Nếu trong Set có sđt trùng nhau thì chỉ lấy 1 và nếu có tồn tại sđt trong csdl thì không insert vào
             	phoneNumbersAdded.add(phone);
                 UserEntity userEntity = userConverter.toEntity(dto);
-                entitiesToSave.add(userEntity);
+                entitiesUserToSave.add(userEntity);
+                
+                // Tạo mới các FavoriteSubjectEntity cho mỗi môn học yêu thích
+                for (String codeSubject : dto.getFavoriteSubjects()) {
+                	SubjectEntity subjectEntity = subjectRepository.findOneByCode(codeSubject);
+                	
+                	if (subjectEntity != null) {
+                        FavoriteSubjectEntity favoriteSubjectEntity = new FavoriteSubjectEntity();
+                        favoriteSubjectEntity.setUser(userEntity);
+                        favoriteSubjectEntity.setSubject(subjectEntity);
+                        favoriteSubjectEntity.setDescription(dto.getDescriptionSubject());
+                        favoriteSubjectsToSave.add(favoriteSubjectEntity);
+                    } else {
+                        // Xử lý trường hợp không tìm thấy môn học với mã codeSubject
+                    }
+                    
+                }
             }
         }
 
-        if (!entitiesToSave.isEmpty()) {
-            List<UserEntity> savedEntities = userRepository.saveAll(entitiesToSave);
-            savedUsers = savedEntities.stream()
+        if (!entitiesUserToSave.isEmpty() && !favoriteSubjectsToSave.isEmpty()) { //Nếu user đó có đăng ký ngành yêu thích thì add user và add favorite subject
+            List<UserEntity> savedUserEntities = userRepository.saveAll(entitiesUserToSave);
+            savedUsers = savedUserEntities.stream()
+                    .map(userConverter::toDTO)
+                    .collect(Collectors.toList());
+            List<FavoriteSubjectEntity> savedFavoriteSubjectEntity = favoriteSubjectRepository.saveAll(favoriteSubjectsToSave);
+            savedfavoriteSubject = savedFavoriteSubjectEntity.stream()
+            		.map(favoriteSubjectConverter::toDTO)
+            		.collect(Collectors.toList());
+        } else { //Nếu user đó không đăng ký ngành yêu thích thì add user
+        	List<UserEntity> savedUserEntities = userRepository.saveAll(entitiesUserToSave);
+            savedUsers = savedUserEntities.stream()
                     .map(userConverter::toDTO)
                     .collect(Collectors.toList());
         }

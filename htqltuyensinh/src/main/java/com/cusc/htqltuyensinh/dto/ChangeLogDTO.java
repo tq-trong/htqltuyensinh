@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ChangeLogDTO extends BaseDTO<ChangeLogDTO>{
 	private Date time;
-	private String admin;
+	private AdminDTO admin;
 	private String description;
 	
 	public Date getTime() {
@@ -13,10 +13,10 @@ public class ChangeLogDTO extends BaseDTO<ChangeLogDTO>{
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	public String getAdmin() {
+	public AdminDTO getAdmin() {
 		return admin;
 	}
-	public void setAdmin(String admin) {
+	public void setAdmin(AdminDTO admin) {
 		this.admin = admin;
 	}
 	public String getDescription() {

@@ -1,5 +1,8 @@
 package com.cusc.htqltuyensinh.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,13 +13,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cusc.htqltuyensinh.converter.FavoriteSubjectConverter;
 import com.cusc.htqltuyensinh.converter.SubjectConverter;
 import com.cusc.htqltuyensinh.converter.UserConverter;
-import com.cusc.htqltuyensinh.dto.UserDTO;
 import com.cusc.htqltuyensinh.dto.FavoriteSubjectDTO;
-import com.cusc.htqltuyensinh.dto.SubjectDTO;
+import com.cusc.htqltuyensinh.dto.UserDTO;
 import com.cusc.htqltuyensinh.entity.FavoriteSubjectEntity;
 import com.cusc.htqltuyensinh.entity.SubjectEntity;
 import com.cusc.htqltuyensinh.entity.UserEntity;
@@ -150,6 +153,13 @@ public class UserService implements IUserService{
 
         return savedUsers;
     }
+	
+	@Override
+	public List<UserDTO> processExcelAndSave(MultipartFile file) throws IOException, ParseException {
+	    InputStream inputStream = file.getInputStream();
+	    List<UserDTO> userDTOs = ExcelReader.readExcel(inputStream);
+	    return saveAll(userDTOs);
+	}
 	
 	private boolean isPhoneNumberExist(String phone) {
         return userRepository.existsByPhone(phone);

@@ -66,6 +66,7 @@ public class UserConverter {
 		SchoolEntity schoolEntity = schoolRepository.findOneByCode(dto.getSchool());
 		
 		entity.setName(dto.getName());
+		
 		entity.setBirthday(dto.getBirthday());
 		entity.setJob(dto.getJob());
 		entity.setProvince(dto.getProvince());

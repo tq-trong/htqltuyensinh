@@ -1,10 +1,13 @@
 package com.cusc.htqltuyensinh.api;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.UserOutput;
@@ -49,10 +53,15 @@ public class UserAPI {
 	}
 
 	@PostMapping(value = "/api/users")
-	public ResponseEntity<List<UserDTO>> createUser(@RequestBody List<UserDTO> userDTOs) {
-		List<UserDTO> savedUsers = userService.saveAll(userDTOs);
-		return ResponseEntity.ok(savedUsers);
-	}
+	public ResponseEntity<List<UserDTO>> uploadExcelFile(@RequestParam("file") MultipartFile file) {
+        try {
+            List<UserDTO> savedUsers = userService.processExcelAndSave(file);
+            return ResponseEntity.ok().body(savedUsers);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 	@PutMapping(value = "/user/{id}")
 	public UserDTO updateUser(@RequestBody UserDTO model, @PathVariable("id") long id) {

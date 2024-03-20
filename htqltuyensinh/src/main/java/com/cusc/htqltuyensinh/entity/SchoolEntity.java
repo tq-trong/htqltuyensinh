@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,7 +18,7 @@ public class SchoolEntity extends BaseEntity{
 	private String name;
 	
 	@Column(name = "provinces_id")
-    private String province;
+    private long province;
 
 	@OneToMany(mappedBy = "school")
     private List<UserEntity> users = new ArrayList<>();
@@ -41,11 +39,11 @@ public class SchoolEntity extends BaseEntity{
 		this.name = name;
 	}
 
-	public String getProvince() {
+	public long getProvince() {
 		return province;
 	}
 
-	public void setProvince(String province) {
+	public void setProvince(long province) {
 		this.province = province;
 	}
 

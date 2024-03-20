@@ -1,6 +1,7 @@
 package com.cusc.htqltuyensinh.api;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.AdminOutput;
 import com.cusc.htqltuyensinh.api.output.CustomUserDetails;
 import com.cusc.htqltuyensinh.dto.AdminDTO;
+import com.cusc.htqltuyensinh.dto.IdDTO;
 import com.cusc.htqltuyensinh.dto.PasswordDTO;
 import com.cusc.htqltuyensinh.service.impl.AdminService;
 
@@ -121,5 +123,14 @@ public class AdminAPI {
 	        );
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failedOutput);
 	    }
+	}
+	@PostMapping(value = "/api/user-manager")
+	public AdminDTO getUserManager(@RequestBody IdDTO dto) {
+		return adminService.findById(dto.getId());
+	}
+	
+	@PostMapping(value = "/api/admin-role")
+	public List<AdminDTO> getListAdminByRole(@RequestBody IdDTO dto) {
+		return adminService.getListAdminByRole(dto.isCheck());
 	}
 }

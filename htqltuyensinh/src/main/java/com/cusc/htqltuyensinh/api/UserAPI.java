@@ -9,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +35,7 @@ public class UserAPI {
 	@Autowired
 	private IUserService userService;
 
-	@GetMapping(value = "/api/data")
+	@GetMapping(value = "/api/users")
 	public UserOutput showUser(@RequestParam("page") int page, @ModelAttribute Input input) {
 
 		UserOutput result = new UserOutput();
@@ -49,6 +47,13 @@ public class UserAPI {
 		long totalItems = userService.totalItem(input.getKeyword());
 
 		result.setTotalPage(result.setTotalPage(totalItems, LIMIT_ITEMS));
+		return result;
+	}
+	
+	@GetMapping(value = "/api/users/{id}")
+	public UserOutput showUser(@PathVariable("id") long id) {
+		UserOutput result = new UserOutput();
+		result.setUser(userService.findById(id));
 		return result;
 	}
 

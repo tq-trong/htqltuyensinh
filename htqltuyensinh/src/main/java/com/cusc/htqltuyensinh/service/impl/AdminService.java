@@ -36,9 +36,9 @@ public class AdminService implements IAdminService, UserDetailsService {
 
 	@Autowired
 	private AdminConverter adminConverter;
-	
+
 	@Autowired
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -53,10 +53,11 @@ public class AdminService implements IAdminService, UserDetailsService {
 				String oldPass = oldAdmin.getPassword();
 				adminEntity = adminConverter.toEntity(dto, oldAdmin);
 				if (dto.getPassword() != null && !dto.getPassword().equals(oldPass)) {
-	                adminEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
-	            } else {
-	                adminEntity.setPassword(oldPass); // Sử dụng mật khẩu cũ nếu không có mật khẩu mới hoặc mật khẩu mới giống mật khẩu cũ
-	            }
+					adminEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
+				} else {
+					adminEntity.setPassword(oldPass); // Sử dụng mật khẩu cũ nếu không có mật khẩu mới hoặc mật khẩu mới
+														// giống mật khẩu cũ
+				}
 			} else {
 				return null;
 			}
@@ -68,19 +69,21 @@ public class AdminService implements IAdminService, UserDetailsService {
 		adminRepository.save(adminEntity);
 		return adminConverter.toDTO(adminEntity);
 	}
+
 	@Override
 	public boolean checkPass(long id, String password) {
-	    Optional<AdminEntity> adminOptional = adminRepository.findById(id);
-	    // Kiểm tra xem có giá trị trong Optional không
-	    if (adminOptional.isPresent()) {
-	        AdminEntity adminEntity = adminOptional.get();
-	        boolean isPasswordMatch = passwordEncoder.matches(password, adminEntity.getPassword());
-	        return isPasswordMatch;
-	    } else {
-	        // Nếu không có giá trị tồn tại, trả về false
-	        return false;
-	    }
+		Optional<AdminEntity> adminOptional = adminRepository.findById(id);
+		// Kiểm tra xem có giá trị trong Optional không
+		if (adminOptional.isPresent()) {
+			AdminEntity adminEntity = adminOptional.get();
+			boolean isPasswordMatch = passwordEncoder.matches(password, adminEntity.getPassword());
+			return isPasswordMatch;
+		} else {
+			// Nếu không có giá trị tồn tại, trả về false
+			return false;
+		}
 	}
+
 	@Override
 	public List<AdminDTO> findAll(String keyword, Pageable pageable) { // Get list Admin
 		List<AdminEntity> entities;
@@ -110,57 +113,53 @@ public class AdminService implements IAdminService, UserDetailsService {
 		}
 		return (int) adminRepository.count();
 	}
-	
+
 	@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AdminEntity admin = adminRepository.findByUsername(username);
-        if (admin == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(admin.isRole() ? "ADMIN" : "USERMANAGER"));
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		AdminEntity admin = adminRepository.findByUsername(username);
+		if (admin == null) {
+			throw new UsernameNotFoundException("User not found with username: " + username);
+		}
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority(admin.isRole() ? "ADMIN" : "USERMANAGER"));
 
-        return new CustomUserDetails(
-        		admin.getId(),
-                admin.getCode(),
-                admin.getName(),
-                admin.getBirthday(),
-                admin.getUsername(),
-                admin.getPassword(),
-                admin.isGender(),
-                admin.getPhone(),
-                admin.getAddress(),
-                admin.getEmail(),
-                admin.isRole(),
-                admin.isStatus(),
-                authorities
-            );
-    }
-	
+		return new CustomUserDetails(admin.getId(), admin.getCode(), admin.getName(), admin.getBirthday(),
+				admin.getUsername(), admin.getPassword(), admin.isGender(), admin.getPhone(), admin.getAddress(),
+				admin.getEmail(), admin.isRole(), admin.isStatus(), authorities);
+	}
+
 	public void login(AdminDTO dto, HttpServletResponse response) {
-	    try {
-	        Authentication authentication = authenticationManager.authenticate(
-	            new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
-	        );
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
 
-	        SecurityContextHolder.getContext().setAuthentication(authentication);
-	    } catch (AuthenticationException e) {
-	        // Xử lý trường hợp xác thực không thành công
-	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	        try {
-	            response.getWriter().write("Authentication failed");
-	        } catch (IOException ioException) {
-	            // Xử lý lỗi khi ghi vào response
-	            ioException.printStackTrace();
-	        }
-	    }
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} catch (AuthenticationException e) {
+			// Xử lý trường hợp xác thực không thành công
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			try {
+				response.getWriter().write("Authentication failed");
+			} catch (IOException ioException) {
+				// Xử lý lỗi khi ghi vào response
+				ioException.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public AdminDTO findById(long id) {
 		AdminEntity adminEntity;
-	    Optional<AdminEntity> adminOptional = adminRepository.findById(id);
-	    adminEntity = adminOptional.get();
-	    return adminConverter.toDTO(adminEntity);
+		Optional<AdminEntity> adminOptional = adminRepository.findById(id);
+		adminEntity = adminOptional.get();
+		return adminConverter.toDTO(adminEntity);
+	}
+
+	@Override
+	public List<AdminDTO> getListAdminByRole(boolean role) {
+		List<AdminEntity> entities;
+
+		entities = adminRepository.findByRole(role);
+		List<AdminDTO> results = entities.stream().map(adminConverter::toDTO).collect(Collectors.toList());
+		return results;
 	}
 }

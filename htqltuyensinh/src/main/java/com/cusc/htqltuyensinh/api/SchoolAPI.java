@@ -1,5 +1,7 @@
 package com.cusc.htqltuyensinh.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.SchoolOutput;
+import com.cusc.htqltuyensinh.dto.IdDTO;
 import com.cusc.htqltuyensinh.dto.SchoolDTO;
 import com.cusc.htqltuyensinh.service.ISchoolService;
 
@@ -58,5 +61,11 @@ public class SchoolAPI {
 	@DeleteMapping(value = "/school")
 	public void deleteSchool(@RequestBody long[] ids) {
 		schoolService.remove(ids);
+	}
+	
+	@PostMapping(value = "/api/schools")
+	public List<SchoolDTO> getListSchoolByProvince(@RequestBody IdDTO id) {
+		//long id = 92;
+		return schoolService.findByProvince(id.getId());
 	}
 }

@@ -11,4 +11,7 @@ import com.cusc.htqltuyensinh.dto.UserDTO;
 public interface IUserService extends IBaseService<UserDTO>{
 	List<UserDTO> saveAll(List<UserDTO> userDTOs);
 	List<UserDTO> processExcelAndSave(MultipartFile file) throws IOException, ParseException;
+	int countUserBySchool(String school);
+	int countUserBySchoolId(long schoolId);
+	List<UserDTO> findUserBySchoolId(long id);
 }

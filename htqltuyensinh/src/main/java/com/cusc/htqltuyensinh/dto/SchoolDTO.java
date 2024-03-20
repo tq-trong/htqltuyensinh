@@ -4,7 +4,7 @@ public class SchoolDTO extends BaseDTO<SchoolDTO>{
 	
 	private String code;
 	private String name;
-	private String province;
+	private long province;
 	
 	public String getCode() {
 		return code;
@@ -18,10 +18,10 @@ public class SchoolDTO extends BaseDTO<SchoolDTO>{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getProvince() {
+	public long getProvince() {
 		return province;
 	}
-	public void setProvince(String province) {
+	public void setProvince(long province) {
 		this.province = province;
 	}
 	

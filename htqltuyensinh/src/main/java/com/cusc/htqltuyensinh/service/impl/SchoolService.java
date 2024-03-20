@@ -77,4 +77,14 @@ public class SchoolService implements ISchoolService{
 		return null;
 	}
 
+	@Override
+	public List<SchoolDTO> findByProvince(long id) {
+		List<SchoolEntity> schoolEntities;
+		schoolEntities = schoolRepository.findAllByProvince(id);	
+		List<SchoolDTO> results = schoolEntities.stream()
+				.map(schoolConverter :: toDTO)
+				.collect(Collectors.toList());
+		return results;	
+	}
+
 }

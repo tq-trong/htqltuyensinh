@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, BaseRep
 	UserEntity findOneById(long id);
 	boolean existsByPhone(String phone);
 	int countUserBySchoolCode(String school);
-	
+	UserEntity findByPhone(String phone);
 	int countUserBySchoolId(long schoolId);
 	
 	List<UserEntity> findBySchoolId(long id);

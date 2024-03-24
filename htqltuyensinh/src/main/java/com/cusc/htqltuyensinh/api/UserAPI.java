@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cusc.htqltuyensinh.api.input.Input;
 import com.cusc.htqltuyensinh.api.output.UserOutput;
+import com.cusc.htqltuyensinh.dto.IdDTO;
 import com.cusc.htqltuyensinh.dto.UserDTO;
 import com.cusc.htqltuyensinh.service.IUserService;
 
@@ -78,4 +79,21 @@ public class UserAPI {
 	public void deleteUser(@RequestBody long[] ids) {
 		userService.remove(ids);
 	}
+	
+	@PostMapping(value = "/api/user")
+	public UserOutput showUserByAssign(@RequestParam("page") int page, @ModelAttribute Input input, @RequestBody IdDTO id) {
+
+		UserOutput result = new UserOutput();
+		result.setPage(1);
+
+		Pageable pageable = PageRequest.of(1, LIMIT_ITEMS);
+		
+		result.setListResult(userService.findAllByAssignId(input.getKeyword(), pageable, id.getId()));
+
+		long totalItems = userService.totalItem(input.getKeyword());
+
+		result.setTotalPage(result.setTotalPage(totalItems, LIMIT_ITEMS));
+		return result;
+	}
+
 }

@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cusc.htqltuyensinh.converter.FavoriteSubjectConverter;
-import com.cusc.htqltuyensinh.converter.SubjectConverter;
 import com.cusc.htqltuyensinh.converter.UserConverter;
 import com.cusc.htqltuyensinh.dto.FavoriteSubjectDTO;
 import com.cusc.htqltuyensinh.dto.UserDTO;
+import com.cusc.htqltuyensinh.entity.AssignDetailEntity;
 import com.cusc.htqltuyensinh.entity.FavoriteSubjectEntity;
 import com.cusc.htqltuyensinh.entity.SubjectEntity;
 import com.cusc.htqltuyensinh.entity.UserEntity;
@@ -37,10 +37,7 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserConverter userConverter;
-
-	@Autowired
-	private SubjectConverter subjectConverter;
-
+	
 	@Autowired
 	private SubjectRepository subjectRepository;
 
@@ -199,6 +196,28 @@ public class UserService implements IUserService {
 
 		userEntities = userRepository.findBySchoolId(id);
 		List<UserDTO> results = userEntities.stream().map(userConverter::toDTO).collect(Collectors.toList());
+		return results;
+	}
+	
+	@Override
+	public List<UserDTO> findAllByAssignId(String keyword, Pageable pageable, long id) {
+		List<UserEntity> listUserByAssignId = new ArrayList<UserEntity>(); //assignDetailRepository.findUserByAssignId(id);
+		//findUserByAssignId
+		List<AssignDetailEntity> listAssignDetailById = assignDetailRepository.findByAssignId(id);
+		for(AssignDetailEntity assignDetail : listAssignDetailById) {
+			if(keyword != null && !keyword.isEmpty()) {
+				if(assignDetail.getUser().getName().toLowerCase().contains(keyword.toLowerCase()) || assignDetail.getUser().getPhone().contains(keyword))
+					listUserByAssignId.add(assignDetail.getUser());
+			}
+			else 
+				listUserByAssignId.add(assignDetail.getUser());
+		}
+//		for(int i =0; i< listAssignDetailById.size();i++) {
+//			listUserByAssignId.add(listAssignDetailById.get(i).getUser());
+//		}
+		
+		List<UserDTO> results = listUserByAssignId.stream().map(userConverter::toDTO).collect(Collectors.toList());
+
 		return results;
 	}
 

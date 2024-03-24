@@ -72,6 +72,7 @@ public class AdminAPI {
 	@PostMapping(value = "/api/admins")
 	public AdminDTO createAdmin(@RequestBody AdminDTO model) {
 		return adminService.save(model);
+		
 	}
 	
 	@PostMapping(value = "/api/admins/checkPass/{id}")

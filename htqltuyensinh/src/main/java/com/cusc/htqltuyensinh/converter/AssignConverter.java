@@ -41,7 +41,7 @@ public class AssignConverter {
 		AdminDTO adminDTO = new AdminDTO();
 
 		if (entity.getAdmin() != null)
-			adminConverter.toDTO(entity.getAdmin());
+			adminDTO = adminConverter.toDTO(entity.getAdmin());
 		else
 			adminDTO = null;
 		if (entity.getId() != null)

@@ -9,4 +9,6 @@ public interface IAssignService extends IBaseService<AssignDTO>{
 	List<AssignDTO> getListAssignBySchool(String code);
 	AssignDTO findOneByCode(String code);
 	List<Object[]> getListDivideDataView(String code);
+	
+//	int getTotalAssignQuantity(long admin);
 }

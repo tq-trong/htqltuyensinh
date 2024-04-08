@@ -22,4 +22,7 @@ public interface AssignRepository extends JpaRepository<AssignEntity, Long>{
 	
 	@Query("SELECT a.code, s.name, a.quantity FROM AssignEntity a, SchoolEntity s WHERE s.code LIKE %:code% AND a.code = :code")
 	List<Object[]> getListDivideDataView(@Param("code") String code);
+	
+//	@Query("SELECT SUM(ae.quantity) FROM AssignEntity ae GROUP BY ae.admin.id WHERE ae.admin.id = :id")
+//	int getTotalAssignQuantityByAdmin(@Param("id") long id);
 }

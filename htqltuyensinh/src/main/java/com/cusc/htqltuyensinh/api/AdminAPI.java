@@ -134,4 +134,9 @@ public class AdminAPI {
 	public List<AdminDTO> getListAdminByRole(@RequestBody IdDTO dto) {
 		return adminService.getListAdminByRole(dto.isCheck());
 	}
+	
+	@GetMapping(value = "/api/usermanagers")
+	public List<AdminDTO> showUsermanager() {
+		return adminService.getListAdminByRole(false);
+	}
 }

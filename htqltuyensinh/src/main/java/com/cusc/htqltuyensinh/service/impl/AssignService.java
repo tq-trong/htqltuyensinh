@@ -89,8 +89,12 @@ public class AssignService implements IAssignService {
 			Optional<AssignEntity> assignOptional = assignRepository.findById(dto.getId());
 			if (assignOptional.isPresent()) {
 				entity = assignOptional.get();
-				entity.setAdmin(adminRepository.findOneByCode(dto.getAdmin().getCode()));
-				entity.setTime(now);
+				if(dto.getCallStatus() != null ) {
+					entity.setCallStatus(dto.getCallStatus());
+				}else {
+					entity.setAdmin(adminRepository.findOneByCode(dto.getAdmin().getCode()));
+					entity.setTime(now);
+				}
 				assignRepository.save(entity);
 			}
 
@@ -186,5 +190,10 @@ public class AssignService implements IAssignService {
 		
 		return assignRepository.getListDivideDataView(code);
 	}
+
+//	@Override
+//	public int getTotalAssignQuantity(long admin) {
+//		return assignRepository.getTotalAssignQuantityByAdmin(admin);
+//	}
 
 }
